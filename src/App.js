@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 
 class App extends React.Component {
+
   render() {
     return (
       <>
@@ -17,7 +18,9 @@ class App extends React.Component {
           <Header />
           <Routes>
             <Route 
+            // "/" is the homepage
               exact path="/"
+              //the homepage will render bestbooks js
               element={<BestBooks />}
             >
             </Route>
