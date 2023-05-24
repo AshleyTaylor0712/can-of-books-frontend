@@ -20,7 +20,6 @@ class BestBooks extends React.Component {
 
 
   // Handle modal: Reveal this modal when the "Add Book" button is clicked, and hide the modal when the modal is closed.
-  // handleSubmitButton =
 
   handleOpenModal = () => {
     this.setState({
