@@ -89,7 +89,7 @@ class BestBooks extends React.Component {
       //console.log(book);
       return (
         <Carousel.Item key={index}>
-          <img src='https://s26162.pcdn.co/wp-content/uploads/2019/11/book-3998252_1920-Edited.jpg' alt='books' />
+          <img src='Book.jpg' alt='books' />
           <Carousel.Caption>
 
             <h3>
