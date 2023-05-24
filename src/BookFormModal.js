@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card"
 
 
 class BookFormModal extends React.Component {
