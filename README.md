@@ -1,3 +1,30 @@
+
+
+
+
+  Lab 12
+Name of feature: Storage
+
+Estimate of time needed to complete: 3 hour
+
+Start time: 0700
+
+Finish time: 1030
+
+Actual time needed to complete: 3 1/2
+
+
+Name of feature: Create
+
+Estimate of time needed to complete: 2 hour
+
+Start time: 0430
+
+Finish time: 
+
+Actual time needed to complete: 
+
+
 # Start your own "Can of Books" App
 
 This repository has starter code to begin work on creating your own online bookshelf.
