@@ -3,6 +3,7 @@ import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
 import BookFormModal from './BookFormModal';
 import Button from 'react-bootstrap/Button';
+import bookimg from './Book.jpg'
 
 
 
@@ -67,6 +68,20 @@ class BestBooks extends React.Component {
     }
   }
 
+  // Is there a way to do this without changing the code pattern?
+  // deleteBooks = async (id) => {
+  //   try {
+  //     let url = `${SERVER}/books/${id}`;
+  //     await axios.delete(url);
+  //     let updatedBooks = this.state.books.filter(books => books._id !== id);
+  //     this.setState({
+  //       cats: updatedCats
+  //     });
+  //   } catch(error){
+  //     console.log('we have an error: ', error.response.data)
+  //   }
+  // }
+
 
   // the next effect of this is when the site loads (specifically this component — it has all it needs), the data will be there
   componentDidMount() {
@@ -89,7 +104,7 @@ class BestBooks extends React.Component {
       //console.log(book);
       return (
         <Carousel.Item key={index}>
-          <img src='Book.jpg' alt='books' />
+          <img src={bookimg} alt='books' />
           <Carousel.Caption>
 
             <h3>
