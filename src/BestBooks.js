@@ -60,6 +60,7 @@ class BestBooks extends React.Component {
       console.log(results);
       this.setState({
         //filling empty books array from state with data from mongo db database
+        // ... takes all the values in the array, then adds results.data
         books: [...this.state.books, results.data],
       })
       console.log(newBook)
@@ -69,18 +70,18 @@ class BestBooks extends React.Component {
   }
 
   // Is there a way to do this without changing the code pattern?
-  // deleteBooks = async (id) => {
-  //   try {
-  //     let url = `${SERVER}/books/${id}`;
-  //     await axios.delete(url);
-  //     let updatedBooks = this.state.books.filter(books => books._id !== id);
-  //     this.setState({
-  //       cats: updatedCats
-  //     });
-  //   } catch(error){
-  //     console.log('we have an error: ', error.response.data)
-  //   }
-  // }
+  deleteBooks = async (id) => {
+    try {
+      let url = `${SERVER}/books/${id}`;
+      await axios.delete(url);
+      let updatedBooks = this.state.books.filter(books => books._id !== id);
+      this.setState({
+        books: updatedBooks
+      });
+    } catch(error){
+      console.log('we have an error: ', error.response.data)
+    }
+  }
 
 
   // the next effect of this is when the site loads (specifically this component — it has all it needs), the data will be there
@@ -116,6 +117,11 @@ class BestBooks extends React.Component {
               {/* accessing the value of description on the book object */}
               description={book.description}
             </p>
+
+                  {/* () prevents all of our books from getting deleted */}
+            <Button onClick={() => this.deleteBooks(book._id)}>delete</Button>
+
+
 
           </Carousel.Caption>
         </Carousel.Item>
