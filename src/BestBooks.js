@@ -83,6 +83,22 @@ class BestBooks extends React.Component {
     }
   }
 
+  putBook = async (bookToUpdate) => {
+    try {
+      let url = `${SERVER}/books/${bookToUpdate._id}`;
+      let updatedBook = await axios.put(url, bookToUpdate);
+      let updatedBooks = this.state.books.map(existingBook => {
+        return existingBook._id === bookToUpdate._id
+        ? updatedBook.data
+        : existingBook;
+      });
+      this.setState ({
+        books: updatedBooks,
+      })
+    } catch (error) {
+    
+    }
+  }
 
   // the next effect of this is when the site loads (specifically this component — it has all it needs), the data will be there
   componentDidMount() {
@@ -157,8 +173,3 @@ class BestBooks extends React.Component {
 }
 
 export default BestBooks;
-
-
-
-
-
