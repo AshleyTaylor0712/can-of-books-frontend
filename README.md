@@ -1,4 +1,9 @@
 
+When you deploy your site, remember to add netlify site to auth0 website.
+
+We will need this for later:
+JSON webkey set
+https://dev-lg3qiyinisn400cs.us.auth0.com/.well-known/jwks.json
 
 
 
