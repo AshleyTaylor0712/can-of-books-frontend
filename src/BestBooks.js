@@ -4,7 +4,8 @@ import Carousel from 'react-bootstrap/Carousel';
 import BookFormModal from './BookFormModal';
 import Button from 'react-bootstrap/Button';
 import bookimg from './Book.jpg'
-
+import { withAuth0 } from '@auth0/auth0-react'
+import UpdateBooks from './UpdateBooks';
 
 
 let SERVER = process.env.REACT_APP_SERVER;
@@ -15,7 +16,9 @@ class BestBooks extends React.Component {
     this.state = {
       books: [],
       isModalDisplaying: false,
-      hasBooks: false
+      showUpdateModal: false, 
+      hasBooks: false,
+      selectedBook: {}
     }
   }
 
@@ -30,8 +33,16 @@ class BestBooks extends React.Component {
 
   handleCloseModal = () => {
     this.setState({
-      isModalDisplaying: false
+      isModalDisplaying: false,
+      showUpdateModal: false
     })
+  }
+
+  handleUpdateModal = (book) => {
+    this.setState({
+      showUpdateModal: true,
+      selectedBook: book
+    });
   }
 
 
@@ -39,19 +50,22 @@ class BestBooks extends React.Component {
 
   getBooks = async () => {
     try {
-      //axios means we are going to get data from the backend
-      let results = await axios.get(`${SERVER}/books`);
-      console.log(results);
-      this.setState({
-        //filling empty books array from state with data from mongo db database
-        books: results.data,
-        hasBooks: true,
-      })
-    } catch (error) {
-      console.log('we have an error: ', error.response.data)
-    }
-  }
+      if (this.props.auth0.isAuthenticated) {
 
+        //axios means we are going to get data from the backend
+        let results = await axios.get(`${SERVER}/books`);
+        console.log(results);
+        this.setState({
+          //filling empty books array from state with data from mongo db database
+          books: results.data,
+          hasBooks: true,
+        })
+      }
+      } catch (error) {
+        console.log('we have an error: ', error.response.data)
+      }
+    }
+    
   postBooks = async (newBook) => {
     console.log("HEYO")
     try {
@@ -78,7 +92,25 @@ class BestBooks extends React.Component {
       this.setState({
         books: updatedBooks
       });
-    } catch(error){
+    } catch (error) {
+      console.log('we have an error: ', error.response.data)
+    }
+  }
+
+  putBooks = async (bookToUpdate) => {
+    try {
+      let url = `${SERVER}/books/${bookToUpdate._id}`;
+      let updatedBook = await axios.put(url, bookToUpdate);
+      let updatedBooks = this.state.books.map(existingBook => {
+        return existingBook._id === bookToUpdate._id
+          ? updatedBook.data
+          : existingBook;
+      });
+      this.setState({
+        books: updatedBooks,
+        // showUpdateModal: true,
+      })
+    } catch (error) {
       console.log('we have an error: ', error.response.data)
     }
   }
@@ -118,7 +150,7 @@ class BestBooks extends React.Component {
               description={book.description}
             </p>
 
-                  {/* () prevents all of our books from getting deleted */}
+            {/* () prevents all of our books from getting deleted */}
             <Button onClick={() => this.deleteBooks(book._id)}>delete</Button>
 
 
@@ -138,12 +170,24 @@ class BestBooks extends React.Component {
         <Carousel>
           {carouselSlides}
         </Carousel>;
+        {/* // show={this.state.isModalDisplaying}
+        // onHide={this.handleCloseModal}
+        // BookFormModal={this.state.BookFormModal}
+        // postBooks={this.postBooks} */}
 
         <BookFormModal
-          show={this.state.isModalDisplaying}
-          onHide={this.handleCloseModal}
-          BookFormModal={this.state.BookFormModal}
-          postBooks={this.postBooks}
+                   show={this.state.isModalDisplaying}
+                   handleClose={this.handleCloseModal}
+                   handleShow={this.handleShowModal}
+                   handleBookSubmit={this.handleBookSubmit}
+        />
+
+         <UpdateBooks
+            show={this.state.showUpdateModal}
+            handleClose={this.handleCloseModal}
+            // handleShow={this.handleShowModal}
+            putBook={this.putBook}
+            book={this.state.selectedBook}
         />
 
         <Button onClick={this.handleOpenModal}>
@@ -156,7 +200,7 @@ class BestBooks extends React.Component {
   }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);
 
 
 
