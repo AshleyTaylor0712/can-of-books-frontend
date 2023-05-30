@@ -16,7 +16,7 @@ class BestBooks extends React.Component {
     this.state = {
       books: [],
       isModalDisplaying: false,
-      showUpdateModal: false, 
+      showUpdateModal: false,
       hasBooks: false,
       selectedBook: {}
     }
@@ -38,7 +38,7 @@ class BestBooks extends React.Component {
     })
   }
 
-  handleUpdateModal = (book) => {
+  openUpdateModal = (book) => {
     this.setState({
       showUpdateModal: true,
       selectedBook: book
@@ -49,8 +49,9 @@ class BestBooks extends React.Component {
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
 
   getBooks = async () => {
-    try {
-      if (this.props.auth0.isAuthenticated) {
+    // Try could trigger an error if the if statement is false. So we must move auth0 out of the try catch.
+    if (this.props.auth0.isAuthenticated) {
+      try {
 
         //axios means we are going to get data from the backend
         let results = await axios.get(`${SERVER}/books`);
@@ -60,12 +61,12 @@ class BestBooks extends React.Component {
           books: results.data,
           hasBooks: true,
         })
-      }
       } catch (error) {
         console.log('we have an error: ', error.response.data)
       }
     }
-    
+  }
+
   postBooks = async (newBook) => {
     console.log("HEYO")
     try {
@@ -98,17 +99,21 @@ class BestBooks extends React.Component {
   }
 
   putBooks = async (bookToUpdate) => {
+    console.log(bookToUpdate)
     try {
       let url = `${SERVER}/books/${bookToUpdate._id}`;
+      console.log(url)
       let updatedBook = await axios.put(url, bookToUpdate);
+      console.log(updatedBook)
+      console.log(this.state.books)
       let updatedBooks = this.state.books.map(existingBook => {
         return existingBook._id === bookToUpdate._id
-          ? updatedBook.data
-          : existingBook;
+        ? updatedBook.data
+        : existingBook;
       });
       this.setState({
+        showUpdateModal: false,
         books: updatedBooks,
-        // showUpdateModal: true,
       })
     } catch (error) {
       console.log('we have an error: ', error.response.data)
@@ -152,6 +157,10 @@ class BestBooks extends React.Component {
 
             {/* () prevents all of our books from getting deleted */}
             <Button onClick={() => this.deleteBooks(book._id)}>delete</Button>
+            {/* () prevents all of our books from getting updated */}
+            <Button onClick={() => this.openUpdateModal(book)}>Update</Button>
+        
+           
 
 
 
@@ -170,24 +179,24 @@ class BestBooks extends React.Component {
         <Carousel>
           {carouselSlides}
         </Carousel>;
-        {/* // show={this.state.isModalDisplaying}
-        // onHide={this.handleCloseModal}
-        // BookFormModal={this.state.BookFormModal}
-        // postBooks={this.postBooks} */}
 
         <BookFormModal
-                   show={this.state.isModalDisplaying}
-                   handleClose={this.handleCloseModal}
-                   handleShow={this.handleShowModal}
-                   handleBookSubmit={this.handleBookSubmit}
+        show={this.state.isModalDisplaying}
+        onHide={this.handleCloseModal}
+        BookFormModal={this.state.BookFormModal}
+        postBooks={this.postBooks}
+          // show={this.state.isModalDisplaying}
+          // handleClose={this.handleCloseModal}
+          // handleShow={this.handleShowModal}
+          // handleBookSubmit={this.handleBookSubmit}
         />
 
-         <UpdateBooks
-            show={this.state.showUpdateModal}
-            handleClose={this.handleCloseModal}
-            // handleShow={this.handleShowModal}
-            putBook={this.putBook}
-            book={this.state.selectedBook}
+        <UpdateBooks
+          show={this.state.showUpdateModal}
+          handleClose={this.handleCloseModal}
+          // handleShow={this.handleShowModal}
+          putBooks={this.putBooks}
+          book={this.state.selectedBook}
         />
 
         <Button onClick={this.handleOpenModal}>
